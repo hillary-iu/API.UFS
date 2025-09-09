@@ -1,47 +1,51 @@
-
+//import colecaoUf from './dados/dados.js';
 import express from 'express';
-import { buscarUfPorId, buscarUFsPorNome, buscarUFs, buscarUFsPorSiglas } from './servicos/servico.js';
+import { buscarUfs, buscarUfsPorId, buscarUfsPorNome, buscarUfsPorSigla } from './servicos/servico.js';
 
 const app = express();
 
 app.get('/ufs', (req, res) => {
-    const nomeUF = req.query.busca;
-    const resultado = nomeUF ? buscarUFsPorNome(nomeUF) : buscarUFs();
-    
-    if (resultado.length > 0 ) {
-        res.json(resultado);
-    }else{
-        res.status(404).send({ "erro": "nenhuma uf encontrada" });
-    }
+const nomeUf = req.query.busca;
+const resultado = nomeUf ? buscarUfsPorNome(nomeUf) : buscarUfs();
+const siglauf = req.query.buscar;
+const resultad_uf =siglauf ? buscarUfsPorSigla(siglauf) : buscarUfs();
+
+if (resultado.length > 0) {
+res.json(resultado);
+} else{
+res.status(404).send({"erro": "nenhuma UF encontrada"});
+}
 });
 
+app.get('/ufs/:siglauf', (req, res) => {
+const siglauf = req.params.siglauf;
+const resultado_uf = buscarUfsPorSigla(siglauf);
+
+
+if (resultado_uf) {
+res.json(resultado_uf);
+} else if (isNaN(parseInt(siglauf))) {
+res.status(400).send({ "erro": "requisiçao invalida"});
+} else {
+res.status(404).send({ "erro": "UF não encontrada"});
+}
+});
 
 app.get('/ufs/:iduf', (req, res) => {
-    const uf = buscarUfPorId(req.params.iduf);
+const idUF = req.params.iduf
+const uf = buscarUfsPorId(idUf);
 
-    if(uf) {
-        res.json(uf);
-    }else if (isNaN(parseInt(req.params.iduf))){
-        res.status(400).send({"erro": "requisição invalida"});
-    }else{
-        res.status(404).send({"erro": "UF não encontrada"});
-    }
-});
 
-app.get('ufs/sigla', (req, res) => {
-    const siglaUF = req.query.busca;
-    const contaa = siglaUF ? buscarUFsPorNome(siglaUF) : buscarUFs();
-
-    if(contaa.length > 0) {
-        res.json(contaa);
-    }else if(isNaN(parseInt(req.params.iduf))){
-        res.status(404).send({"erro": "Uf não encontrada"});
-    }else{
-        res.status(400).send({"erro":"requisiçaõ invalida"})
-    }
+if (uf) {
+res.json(uf);
+} else if (isNaN(parseInt(req.params.iduf))) {
+res.status(400).json({ "erro": "requisiçao invalida"});
+} else {
+res.status(404).json({ "erro": "UF não encontrada"});
+}
 });
 
 app.listen(8080, () => {
-    console.log('servidor iniciado na porta 8080 em: ' );
+console.log('servidor iniciado na porta 8080 ');
 });
 

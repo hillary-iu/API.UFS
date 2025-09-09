@@ -15,6 +15,7 @@ export const buscarUfPorId = (id) => {
     return colecaoUf.find(uf => uf.id === idUF);
 }
 
-export const buscarUFsPorSiglas = (siglaUf) => {
+// Retorna UFs pela sigla
+export const buscarUFsPorSigla = (siglaUf) => {
     return colecaoUf.filter(uf => uf.sigla.toLowerCase().includes(siglaUf.toLowerCase()));
 }
