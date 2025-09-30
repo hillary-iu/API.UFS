@@ -1,14 +1,14 @@
 //import colecaoUf from './dados/dados.js';
 import express from 'express';
-import { buscarUfs, buscarUfsPorId, buscarUfsPorNome, buscarUfsPorSigla } from './servicos/servico.js';
+import { buscarUFs, buscarUfsPorId, buscarUFsPorNome, buscarUFsPorSigla } from './servicos/servico.js';
 
 const app = express();
 
 app.get('/ufs', (req, res) => {
 const nomeUf = req.query.busca;
-const resultado = nomeUf ? buscarUfsPorNome(nomeUf) : buscarUfs();
+const resultado = nomeUf ? buscarUFsPorNome(nomeUf) : buscarUFs();
 const siglauf = req.query.buscar;
-const resultad_uf =siglauf ? buscarUfsPorSigla(siglauf) : buscarUfs();
+const resultad_uf =siglauf ? buscarUfsPorSigla(siglauf) : buscarUFs();
 
 if (resultado.length > 0) {
 res.json(resultado);
