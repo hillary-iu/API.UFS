@@ -1,51 +1,58 @@
-//import colecaoUf from './dados/dados.js';
 import express from 'express';
-import { buscarUFs, buscarUfPorId, buscarUFsPorNome, buscarUFsPorSigla } from './servicos/servico.js';
+import { buscarUfs, buscarUfPorId, buscarUfsPorNome, buscarUfPorSigla, listarPorInicial} from './servicos/servico.js';
 
 const app = express();
 
 app.get('/ufs', (req, res) => {
 const nomeUf = req.query.busca;
-const resultado = nomeUf ? buscarUFsPorNome(nomeUf) : buscarUFs();
-const siglauf = req.query.buscar;
-const resultad_uf =siglauf ? buscarUFsPorSigla(siglauf) : buscarUFs();
+const resultado = nomeUf ? buscarUfsPorNome(nomeUf) : buscarUfs();
 
 if (resultado.length > 0) {
 res.json(resultado);
-} else{
-res.status(404).send({"erro": "nenhuma UF encontrada"});
-}
-});
-
-app.get('/ufs/:siglauf', (req, res) => {
-const siglauf = req.params.siglauf;
-const resultado_uf = buscarUFsPorSigla(siglauf);
-
-
-if (resultado_uf) {
-res.json(resultado_uf);
-} else if (isNaN(parseInt(siglauf))) {
-res.status(400).send({ "erro": "requisiçao invalida"});
 } else {
-res.status(404).send({ "erro": "UF não encontrada"});
+res.status(404).send(({ "erro": "Nenhuma UF encontrada" }));
 }
 });
+
 
 app.get('/ufs/:iduf', (req, res) => {
-const idUF = req.params.iduf
-const uf = buscarUfPorId(idUF);
-
+const idUf = req.params.iduf;
+const uf = buscarUfPorId(idUf);
 
 if (uf) {
 res.json(uf);
 } else if (isNaN(parseInt(req.params.iduf))) {
-res.status(400).json({ "erro": "requisiçao invalida"});
+res.status(400).send({ "erro": "Requisição inválida" });
 } else {
-res.status(404).json({ "erro": "UF não encontrada"});
+res.status(404).send({ "erro": "UF não encontrada" });
 }
 });
 
-app.listen(8080, () => {
-console.log('servidor iniciado na porta 8080 ');
+app.get('/ufs/sigla/:sigla', (req, res) => {
+const siglaUf = req.params.sigla;
+const uf = buscarUfPorSigla(siglaUf);
+
+if(uf) {
+res.json(uf);
+} else {
+res.status(404).send({"erro": "UF não encontrada"});
+}
+})
+
+
+app.get('/ufs/inicial/:inicial', (req, res) => {
+const inicialUf = req.params.inicial;
+const resultado = listarPorInicial(inicialUf);
+
+if(resultado.length > 0) {
+res.json(resultado);
+} else {
+res.status(404).send({"erro": "Nenhuma UF encontrada com essa inicial"})
+}
 });
 
+
+app.listen(8080, () => {
+let data = new Date();
+console.log('Servidor iniciado na porta 8080 em: ' + data);
+});
