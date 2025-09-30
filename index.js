@@ -1,6 +1,6 @@
 //import colecaoUf from './dados/dados.js';
 import express from 'express';
-import { buscarUFs, buscarUfsPorId, buscarUFsPorNome, buscarUFsPorSigla } from './servicos/servico.js';
+import { buscarUFs, buscarUfPorId, buscarUFsPorNome, buscarUFsPorSigla } from './servicos/servico.js';
 
 const app = express();
 
@@ -33,7 +33,7 @@ res.status(404).send({ "erro": "UF não encontrada"});
 
 app.get('/ufs/:iduf', (req, res) => {
 const idUF = req.params.iduf
-const uf = buscarUfsPorId(idUF);
+const uf = buscarUfPorId(idUF);
 
 
 if (uf) {
